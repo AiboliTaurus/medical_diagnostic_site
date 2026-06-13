@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Контакты{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Контакты</h1>
+        <p><strong>Адрес:</strong> {{ company_info.address|default:"г. Краснодар, ул. 1 Мая, 165/2" }}</p>
+        <p><strong>Телефон:</strong> {{ company_info.phone|default:"+7 (999) 123-45-67" }}</p>
+        <p><strong>Email:</strong> {{ company_info.email|default:"info@mediagnostic.ru" }}</p>
+
+        <h3 class="mt-4">Режим работы</h3>
+        <p>Пн-Пт: 8:00 - 20:00<br>
+        Сб: 9:00 - 18:00<br>
+        Вс: 10:00 - 16:00</p>
+    </div>
+    <div class="col-md-6">
+        <h2>Напишите нам</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h3>Схема проезда</h3>
+        <div style="height: 400px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <iframe
+                src="https://yandex.ru/map-widget/v1/?ll=39.020157,45.063477&z=17&pt=39.020157,45.063477,pm2rdm&l=map"
+                width="100%"
+                height="100%"
+                frameborder="0"
+                allowfullscreen="true"
+                style="border: none;">
+            </iframe>
+        </div>
+        <p class="text-muted mt-2 small">📍 Наш медицинский центр на карте</p>
+    </div>
+</div>
+{% endblock %}

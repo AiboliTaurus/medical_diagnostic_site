@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Услуги{% endblock %}
+{% block content %}
+<h1>Наши услуги</h1>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="get" class="row g-3">
+            <div class="col-auto">
+                <select name="category" class="form-select">
+                    <option value="">Все категории</option>
+                    {% for cat_value, cat_name in categories %}
+                    <option value="{{ cat_value }}" {% if selected_category == cat_value %}selected{% endif %}>
+                        {{ cat_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Фильтр</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for service in services %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ service.name }}</h5>
+                <p class="card-text">{{ service.description|truncatewords:20 }}</p>
+                <p class="card-text"><strong>{{ service.price }} ₽</strong></p>
+                <a href="{% url 'services:service_detail' service.pk %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><p>Услуги пока не добавлены в административной панели.</p></div>
+    {% endfor %}
+</div>
+{% endblock %}

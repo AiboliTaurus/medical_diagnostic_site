@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Запись на приём{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Запись на приём</h2>
+        <form method="post" id="appointmentForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Записаться</button>
+            <a href="{% url 'pages:home' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceSelect = document.getElementById('id_service');
+        const doctorSelect = document.getElementById('id_doctor');
+
+        if (serviceSelect && doctorSelect) {
+            // Функция загрузки врачей
+            function loadDoctors() {
+                const serviceId = serviceSelect.value;
+
+                if (serviceId) {
+                    fetch(`/api/get_doctors_by_service/?service_id=${serviceId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            doctorSelect.innerHTML = '<option value="">---------</option>';
+                            if (data.doctors && data.doctors.length > 0) {
+                                data.doctors.forEach(doctor => {
+                                    const option = document.createElement('option');
+                                    option.value = doctor.id;
+                                    option.textContent = `${doctor.name} (${doctor.specialty})`;
+                                    doctorSelect.appendChild(option);
+                                });
+                            } else {
+                                const option = document.createElement('option');
+                                option.value = "";
+                                option.textContent = "Нет доступных врачей";
+                                doctorSelect.appendChild(option);
+                            }
+                        })
+                        .catch(error => console.error('Ошибка:', error));
+                } else {
+                    doctorSelect.innerHTML = '<option value="">---------</option>';
+                }
+            }
+
+            // Загружаем врачей при изменении услуги
+            serviceSelect.addEventListener('change', loadDoctors);
+
+            // Если услуга уже выбрана при загрузке страницы
+            if (serviceSelect.value) {
+                loadDoctors();
+            }
+        }
+    });
+</script>
+{% endblock %}

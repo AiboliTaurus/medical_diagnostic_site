@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Главная - Медицинская диагностика{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center mb-5">
+        <h1>Добро пожаловать в Медицинскую Диагностику</h1>
+        <p class="lead">Современная диагностика здоровья с заботой о вас</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <h2>О нас</h2>
+        <p>{{ company_info.history|truncatewords:50|default:"Мы - лидеры в области медицинской диагностики. Используем передовое оборудование и лучших специалистов." }}</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-12">
+        <h2>Популярные услуги</h2>
+    </div>
+    {% for service in services %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ service.name }}</h5>
+                <p class="card-text">{{ service.description|truncatewords:15 }}</p>
+                <p class="card-text"><strong>{{ service.price }} ₽</strong></p>
+                <a href="{% url 'services:service_detail' service.pk %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><p>Услуги пока не добавлены.</p></div>
+    {% endfor %}
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Контакты</h2>
+        <p><strong>Адрес:</strong> {{ company_info.address|default:"г. Москва, ул. Примерная, 1" }}</p>
+        <p><strong>Телефон:</strong> {{ company_info.phone|default:"+7 (999) 123-45-67" }}</p>
+        <p><strong>Email:</strong> {{ company_info.email|default:"info@mediagnostic.ru" }}</p>
+    </div>
+    <div class="col-md-6">
+        <h2>Свяжитесь с нами</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Отправить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
